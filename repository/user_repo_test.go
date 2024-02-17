@@ -39,21 +39,13 @@ func (suite *UserRepoTestSuite) SetupTest() {
 	suite.repo = NewUserRepository(suite.mockDB)
 }
 
-//func (suite *UserRepoTestSuite) TestCreate_Succes() {
-//    suite.mockSql.ExpectBegin()
-//	suite.mockSql.ExpectQuery("INSERT INTO USERS").WillReturnRows(sqlmock.NewRows([]string{"id"}).
-//	AddRow(mockUser.Id))
-//	suite.mockSql.ExpectCommit()
-//	actualUser, actualErr := suite.repo.GetById()
-//}
-
-func (suite *UserRepoTestSuite) TestGetId_UserFail() {
-	suite.mockSql.ExpectQuery("SELECT (.+) FROM users").WithArgs("XX").WillReturnError(errors.New("error"))
-	_, actualErr := suite.repo.GetById("XX")
-	assert.Error(suite.T(), actualErr)
-	assert.Equal(suite.T(), "error", actualErr.Error())
-}
-
+//	func (suite *UserRepoTestSuite) TestCreate_Succes() {
+//	   suite.mockSql.ExpectBegin()
+//		suite.mockSql.ExpectQuery("INSERT INTO USERS").WillReturnRows(sqlmock.NewRows([]string{"id"}).
+//		AddRow(mockUser.Id))
+//		suite.mockSql.ExpectCommit()
+//		actualUser, actualErr := suite.repo.GetById()
+//	}
 func (suite *UserRepoTestSuite) TestGetId_Success() {
 	suite.mockSql.ExpectQuery("SELECT (.+) FROM users").WithArgs(mockUser.Id).WillReturnRows(sqlmock.NewRows([]string{"id", "name", "email", "username", "password", "role", "created_at", "updated_at"}).
 		AddRow(
@@ -70,14 +62,12 @@ func (suite *UserRepoTestSuite) TestGetId_Success() {
 	assert.Nil(suite.T(), actualErr)
 	assert.Equal(suite.T(), mockUser, actualUser)
 }
-
-func (suite *UserRepoTestSuite) TestGetUsername_UserFail() {
+func (suite *UserRepoTestSuite) TestGetId_UserFail() {
 	suite.mockSql.ExpectQuery("SELECT (.+) FROM users").WithArgs("XX").WillReturnError(errors.New("error"))
-	_, actualErr := suite.repo.GetByUsername("XX")
+	_, actualErr := suite.repo.GetById("XX")
 	assert.Error(suite.T(), actualErr)
 	assert.Equal(suite.T(), "error", actualErr.Error())
 }
-
 func (suite *UserRepoTestSuite) TestGetUsername_Success() {
 	suite.mockSql.ExpectQuery("SELECT (.+) FROM users").WithArgs(mockUser.Username).WillReturnRows(sqlmock.NewRows([]string{"id", "name", "email", "username", "password", "role", "created_at", "updated_at"}).
 		AddRow(
@@ -93,6 +83,13 @@ func (suite *UserRepoTestSuite) TestGetUsername_Success() {
 	actualUser, actualErr := suite.repo.GetByUsername(mockUser.Username)
 	assert.Nil(suite.T(), actualErr)
 	assert.Equal(suite.T(), mockUser, actualUser)
+}
+
+func (suite *UserRepoTestSuite) TestGetUsername_UserFail() {
+	suite.mockSql.ExpectQuery("SELECT (.+) FROM users").WithArgs("XX").WillReturnError(errors.New("error"))
+	_, actualErr := suite.repo.GetByUsername("XX")
+	assert.Error(suite.T(), actualErr)
+	assert.Equal(suite.T(), "error", actualErr.Error())
 }
 func TestUserRepoTestSuite(t *testing.T) {
 	suite.Run(t, new(UserRepoTestSuite))
