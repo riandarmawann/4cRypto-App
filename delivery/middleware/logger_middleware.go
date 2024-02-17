@@ -11,9 +11,20 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func Logger() gin.HandlerFunc {
+type LoggerMiddleware interface {
+	Logger() gin.HandlerFunc
+}
+
+type loggerMiddleware struct {
+}
+
+func NewLoggerMiddleware() LoggerMiddleware {
+	return &loggerMiddleware{}
+}
+
+func (c *loggerMiddleware) Logger() gin.HandlerFunc {
 	// Open log file
-	logFile, err := os.OpenFile("D:/BELVA/FinalProject4cRypto/log.txt", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0666)
+	logFile, err := os.OpenFile("./log.txt", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0666)
 	if err != nil {
 		log.Fatal(err)
 	}
