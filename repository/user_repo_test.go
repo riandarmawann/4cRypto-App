@@ -54,14 +54,14 @@ func (suite *UserRepoTestSuite) TestGetId_UserFail() {
 	assert.Equal(suite.T(), "error", actualErr.Error())
 }
 
-func (suite *UserRepoTestSuite) TestGetId_Succes() {
+func (suite *UserRepoTestSuite) TestGetId_Success() {
 	suite.mockSql.ExpectQuery("SELECT (.+) FROM users").WithArgs(mockUser.Id).WillReturnRows(sqlmock.NewRows([]string{"id", "name", "email", "username", "password", "role", "created_at", "updated_at"}).
-		AddRows(
+		AddRow(
 			mockUser.Id,
 			mockUser.Name,
 			mockUser.Email,
-			mockUser.Password,
 			mockUser.Username,
+			mockUser.Password,
 			mockUser.Role,
 			mockUser.CreatedAt,
 			mockUser.UpdatedAt,
@@ -78,14 +78,14 @@ func (suite *UserRepoTestSuite) TestGetUsername_UserFail() {
 	assert.Equal(suite.T(), "error", actualErr.Error())
 }
 
-func (suite *UserRepoTestSuite) TestGetUsername_Succes() {
+func (suite *UserRepoTestSuite) TestGetUsername_Success() {
 	suite.mockSql.ExpectQuery("SELECT (.+) FROM users").WithArgs(mockUser.Username).WillReturnRows(sqlmock.NewRows([]string{"id", "name", "email", "username", "password", "role", "created_at", "updated_at"}).
-		AddRows(
+		AddRow(
 			mockUser.Id,
 			mockUser.Name,
 			mockUser.Email,
-			mockUser.Password,
 			mockUser.Username,
+			mockUser.Password,
 			mockUser.Role,
 			mockUser.CreatedAt,
 			mockUser.UpdatedAt,
