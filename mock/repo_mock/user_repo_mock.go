@@ -19,3 +19,8 @@ func (u *UserRepoMock) GetByUsername(username string) (entity.User, error) {
 	args := u.Called(username)
 	return args.Get(0).(entity.User), args.Error(1)
 }
+
+func (u *UserRepoMock) DeleteUser(id string) error {
+	args := u.Called(id)
+	return args.Error(0)
+}

@@ -10,6 +10,7 @@ import (
 type UserRepository interface {
 	GetById(id string) (entity.User, error)
 	GetByUsername(username string) (entity.User, error)
+	DeleteUser(id string) error
 }
 
 type userRepository struct {
@@ -49,4 +50,14 @@ func (r *userRepository) GetByUsername(username string) (entity.User, error) {
 	}
 
 	return user, nil
+}
+
+func (r *userRepository) DeleteUser(id string) error {
+	query := `DELETE FROM users WHERE id = $1`
+	_, err := r.db.Exec(query, id)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

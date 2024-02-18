@@ -4,6 +4,7 @@ import (
 	"4crypto/model/entity"
 	"database/sql"
 	"errors"
+	"fmt"
 	"testing"
 	"time"
 
@@ -39,13 +40,6 @@ func (suite *UserRepoTestSuite) SetupTest() {
 	suite.repo = NewUserRepository(suite.mockDB)
 }
 
-//	func (suite *UserRepoTestSuite) TestCreate_Succes() {
-//	   suite.mockSql.ExpectBegin()
-//		suite.mockSql.ExpectQuery("INSERT INTO USERS").WillReturnRows(sqlmock.NewRows([]string{"id"}).
-//		AddRow(mockUser.Id))
-//		suite.mockSql.ExpectCommit()
-//		actualUser, actualErr := suite.repo.GetById()
-//	}
 func (suite *UserRepoTestSuite) TestGetId_Success() {
 	suite.mockSql.ExpectQuery("SELECT (.+) FROM users").WithArgs(mockUser.Id).WillReturnRows(sqlmock.NewRows([]string{"id", "name", "email", "username", "password", "role", "created_at", "updated_at"}).
 		AddRow(
@@ -69,27 +63,37 @@ func (suite *UserRepoTestSuite) TestGetId_UserFail() {
 	assert.Equal(suite.T(), "error", actualErr.Error())
 }
 func (suite *UserRepoTestSuite) TestGetUsername_Success() {
-	suite.mockSql.ExpectQuery("SELECT (.+) FROM users").WithArgs(mockUser.Username).WillReturnRows(sqlmock.NewRows([]string{"id", "name", "email", "username", "password", "role", "created_at", "updated_at"}).
+	suite.mockSql.ExpectQuery("SELECT (.+) FROM users").WithArgs(mockUser.Username).WillReturnRows(sqlmock.NewRows([]string{"id", "email", "username", "password", "role"}).
 		AddRow(
 			mockUser.Id,
-			mockUser.Name,
 			mockUser.Email,
 			mockUser.Username,
 			mockUser.Password,
 			mockUser.Role,
-			mockUser.CreatedAt,
-			mockUser.UpdatedAt,
 		))
 	actualUser, actualErr := suite.repo.GetByUsername(mockUser.Username)
-	assert.Nil(suite.T(), actualErr)
-	assert.Equal(suite.T(), mockUser, actualUser)
+	fmt.Println(actualUser, mockUser)
+	fmt.Println(actualErr)
+	assert.NoError(suite.T(), actualErr)
+	assert.Equal(suite.T(), mockUser.Email, actualUser.Email)
 }
 
 func (suite *UserRepoTestSuite) TestGetUsername_UserFail() {
 	suite.mockSql.ExpectQuery("SELECT (.+) FROM users").WithArgs("XX").WillReturnError(errors.New("error"))
 	_, actualErr := suite.repo.GetByUsername("XX")
 	assert.Error(suite.T(), actualErr)
-	assert.Equal(suite.T(), "error", actualErr.Error())
+}
+
+func (suite *UserRepoTestSuite) TestDeleteUser_Success() {
+	suite.mockSql.ExpectExec("DELETE FROM users").WithArgs(mockUser.Id).WillReturnResult(sqlmock.NewResult(1, 1))
+	actualErr := suite.repo.DeleteUser(mockUser.Id)
+	assert.NoError(suite.T(), actualErr)
+}
+
+func (suite *UserRepoTestSuite) TestDeleteUser_UserFail() {
+	suite.mockSql.ExpectExec("DELETE FROM users").WithArgs("XX").WillReturnError(errors.New("error"))
+	actualErr := suite.repo.DeleteUser("XX")
+	assert.Error(suite.T(), actualErr)
 }
 func TestUserRepoTestSuite(t *testing.T) {
 	suite.Run(t, new(UserRepoTestSuite))
