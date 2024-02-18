@@ -1,7 +1,7 @@
 # Aplikasi 4cRypto
 
 ## GETTING SOURCES
-Download the source code from github to a local folder of your choice by executing:
+Download the source code from gitlab to a local folder of your choice by executing:
 `git clone https://git.enigmacamp.com/enigma-camp/enigmacamp-2.0/batch-17-golang/final-project/group-3/4cRypto.git`
 
 ## FITUR
