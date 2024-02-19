@@ -10,8 +10,21 @@ In order to build 4cRypto, you will need the following tools installed in your s
 
 * **Go** (recent version) - http://golang.org/doc/install
 * **Git** (optional) - http://git-scm.com/downloads
+
+* **GITHUB**
+
+  * github.com/gin-gonic/gin
+
+  * github.com/golang-jwt/jwt/v5
+
+  * github.com/joho/godotenv
+
+  * github.com/lib/pq
+
+  * github.com/stretchr/testify
     
 ## Features
+
 Features available in 4cRypto :
 
 * **Testing**
@@ -41,7 +54,7 @@ Features available in 4cRypto :
 
   Database functions to store and manage data.
 
-  Make database with db name:db4crypto and create database with 4cRypto_ddl.sql and 4cRypto_dml.sql
+  Make database with database name:db4crypto and create database with 4cRypto_ddl.sql and 4cRypto_dml.sql
 
 * **Login**
 
@@ -55,7 +68,7 @@ Features available in 4cRypto :
 #### Login
 
 Request : - Method : `POST`
-- Endpoint : `/api/v1`
+- Endpoint : `/api/v1/auth/login`
 - Header :
   - Content-Type : application/json
   - Accept : application/json
@@ -64,5 +77,22 @@ Request : - Method : `POST`
 {
   "username": "string",
   "password": "string"
+}
+```
+
+Response :
+
+- Status : 200 OK
+- Body :
+
+```json
+{
+    "Status": {
+        "Code"           : 200,
+        "Description"    : "Successfully logged in",
+    },
+    "Data": {
+        "Token" : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
+    }
 }
 ```
