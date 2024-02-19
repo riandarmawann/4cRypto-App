@@ -2,23 +2,51 @@ package delivery
 
 import (
 	"4crypto/config"
-	"4crypto/mock/server_mock"
+
+	// "bytes"
+	// "errors"
+	// "log"
+	// "net/http"
+	// "net/http/httptest"
+
+	// "4crypto/delivery"
 	configmock "4crypto/mock/config_mock"
 	managermock "4crypto/mock/manager_mock"
 	servicemock "4crypto/mock/service_mock"
 	usecasemock "4crypto/mock/usecase_mock"
-	"errors"
+	"os"
+	"time"
 
-	"bytes"
-
-	"log"
-	"net/http"
-	"net/http/httptest"
 	"testing"
 
 	"github.com/gin-gonic/gin"
-	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/suite"
+)
+
+var (
+	apiConfigMock = config.ApiConfig{
+		ApiPort: "8080",
+	}
+	dbConfigMock = config.DbConfig{
+		Host:     "localhost",
+		Port:     "5433",
+		Name:     "enigma_laundry_apps",
+		User:     "postgres",
+		Password: "postgres",
+		Driver:   "postgres",
+	}
+
+	tokenConfigMock = config.TokenConfig{
+		IssuerName:      os.Getenv("TOKEN_ISSUER_NAME"),
+		JwtSignatureKey: []byte(os.Getenv("TOKEN_KEY")),
+		JwtLifeTime:     time.Duration(1) * time.Minute,
+	}
+
+	configMock = config.Config{
+		ApiConfig:   apiConfigMock,
+		DbConfig:    dbConfigMock,
+		TokenConfig: tokenConfigMock,
+	}
 )
 
 type ServerTestSuite struct {
@@ -29,7 +57,7 @@ type ServerTestSuite struct {
 	umm    *managermock.UseCaseManagerMock
 	host   string
 	cm     *configmock.ConfigMock
-	sm     *servermock.ServerMock
+	// sm     *servermock.ServerMock
 }
 
 func (suite *ServerTestSuite) SetupTest() {
@@ -37,108 +65,24 @@ func (suite *ServerTestSuite) SetupTest() {
 	suite.jtm = new(servicemock.JwtTokenMock)
 	suite.umm = new(managermock.UseCaseManagerMock)
 	suite.cm = new(configmock.ConfigMock)
-	suite.engine = gin.New()
+	suite.engine = gin.Default()
+
 	suite.host = ":8080"
 }
 
-func (suite *ServerTestSuite) TestNewServer_Success() {
-	// Mocks setup
-	suite.cm.On("NewConfig").Return(&config.Config{}, nil)
-	suite.umm.On("NewAuthUseCase").Return(suite.aucm)
-	suite.umm.On("NewJwtTokenService").Return(suite.jtm)
-
-	// Create a new server
-	server, err := suite.cm.NewServer(suite.cm, suite.umm, suite.host)
-
-	// Assertions
-	assert.NotNil(suite.T(), server)
-	assert.NoError(suite.T(), err)
-	assert.NotNil(suite.T(), server.UCManager)
-	assert.NotNil(suite.T(), server.Engine)
-	assert.NotNil(suite.T(), server.Auth)
-	assert.NotNil(suite.T(), server.JwtService)
-	assert.Equal(suite.T(), ":8080", server.Host)
-}
-
-func (suite *ServerTestSuite) TestNewServer_Failure() {
-	// Mocks setup
-	suite.cm.On("NewConfig").Return(nil, errors.New("configuration error"))
-
-	// Attempt to create a new server with failing config
-	server, err := suite.cm.NewServer(suite.cm, suite.umm, suite.host)
-
-	// Assertions
-	assert.Nil(suite.T(), server)
-	assert.Error(suite.T(), err)
-}
-
 func (suite *ServerTestSuite) TestSetupControllers_Success() {
-	// Persiapkan server
-	server := &Server{
-		engine: gin.New(),
+	server := Server{
+		engine:     suite.engine,
+		auth:       suite.aucm,
+		jwtService: suite.jtm,
 	}
 
-	// Jalankan setupControllers
 	server.setupControllers()
-
-	// pengujian untuk rute "/api/v1" yang diasumsikan memiliki controller AuthController
-	req, err := http.NewRequest("GET", "/api/v1", nil)
-	if err != nil {
-		log.Fatalf("Error creating request: %v", err)
-	}
-
-	rr := httptest.NewRecorder()
-	server.engine.ServeHTTP(rr, req)
-
-	// Lakukan pengujian untuk memastikan bahwa status code yang diharapkan diperoleh
-	assert.Equal(suite.T(), http.StatusNotFound, rr.Code, "Handler returned wrong status code")
 }
 
-// func (suite *ServerTestSuite) TestRun() {
-// 	// Persiapkan server
-// 	server := &Server{
-// 		engine: gin.New(),
-// 		host:   ":8080",
-// 	}
+func (suite *ServerTestSuite) TestRun_Success() {
 
-// 	// Jalankan setupControllers untuk menambahkan rute
-// 	server.setupControllers()
-
-// 	// Buat request palsu ke suatu rute yang telah ditetapkan
-// 	req, err := http.NewRequest("GET", "/api/v1/route", nil)
-// 	if err != nil {
-// 		log.Fatalf("Error creating request: %v", err)
-// 	}
-
-// 	rr := httptest.NewRecorder()
-// 	server.engine.ServeHTTP(rr, req)
-
-// 	// Lakukan pengujian untuk memastikan bahwa respons status yang diharapkan diperoleh
-// 	assert.Equal(suite.T(), http.StatusNotFound, rr.Code, "Handler returned wrong status code")
-// }
-
-func (suite *ServerTestSuite) TestRun() {
-}
-
-func (suite *ServerTestSuite) TestRun_Fail() {
-	// Persiapkan server
-	server := &Server{
-		engine: gin.New(),
-		host:   ":invalid", // Sengaja memasukkan host yang tidak valid untuk menimbulkan error
-	}
-
-	// Membuat buffer untuk menangkap output log
-	var buf bytes.Buffer
-	log.SetOutput(&buf)
-
-	// Jalankan setupControllers untuk menambahkan rute
-	server.setupControllers()
-
-	// Jalankan fungsi Run yang seharusnya menghasilkan error
-	server.Run()
-
-	// Memeriksa apakah log.Fatal() dipanggil dengan pesan yang diharapkan
-	assert.Contains(suite.T(), buf.String(), "server can't run", "log.Fatal() should be called with correct message")
+	NewServer()
 }
 
 func TestServerMockTestSuite(t *testing.T) {

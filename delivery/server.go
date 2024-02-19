@@ -49,7 +49,7 @@ func NewServer() *Server {
 
 func (s *Server) setupControllers() {
 	rg := s.engine.Group("/api/v1")
-	// authMiddleware := middleware.NewAuthMiddleware(s.jwtService)
+
 	controller.NewAuthController(s.auth, rg, s.jwtService).Route()
 }
 

@@ -1,4 +1,4 @@
-package delivery
+package mock
 
 import (
 	managermock "4crypto/mock/manager_mock"
@@ -13,8 +13,8 @@ import (
 
 type ServerMock struct {
 	mock.Mock
-	engine     *gin.Engine
-	host       string
+	engine         *gin.Engine
+	host           string
 	ucManagerMock  managermock.UseCaseManagerMock
 	authMock       usecasemock.AuthUseCaseMock
 	jwtServiceMock servicemock.JwtTokenMock
@@ -32,8 +32,8 @@ func (s *ServerMock) NewServer() *ServerMock {
 
 	// Simulate the behavior of initializing a Server instance
 	mockedServer := &ServerMock{
-		engine:     engine,
-		host:       host,
+		engine:         engine,
+		host:           host,
 		ucManagerMock:  *ucManagerMock,
 		authMock:       *authMock,
 		jwtServiceMock: *jwtServiceMock,
