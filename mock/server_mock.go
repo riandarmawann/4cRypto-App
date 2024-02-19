@@ -1,8 +1,8 @@
 package delivery
 
 import (
-	"4crypto/usecase"
-	"4crypto/utils/common"
+	//"4crypto/usecase"
+	//"4crypto/utils/common"
 	"log"
 
 	"github.com/gin-gonic/gin"
@@ -11,10 +11,10 @@ import (
 
 type ServerMock struct {
 	mock.Mock
-	engine     *gin.Engine
-	auth       usecase.AuthUseCase
-	jwtService common.JwtToken
-	host       string
+	engine *gin.Engine
+	//auth       usecase.AuthUseCase
+	//jwtService common.JwtToken
+	host string
 }
 
 func (s *ServerMock) setupControllers() {
