@@ -18,6 +18,8 @@ Login functions to get a jwt authorization token
 
 ## How to Run the Application
 
+make database with db name:db4crypto and create database with 4cRypto_ddl.sql and 4cRypto_dml.sql
+
 ### User API
 
 #### Login
