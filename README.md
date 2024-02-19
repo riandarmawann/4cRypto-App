@@ -16,14 +16,14 @@ Features available in 4cRypto :
 
 * **Testing**
 
-Testing functions so that existing code runs as expected.
+  Testing functions so that existing code runs as expected.
 
-For run a testing can use 
+  For run a testing can use 
 
 
 	go test ./... -coverprofile cover.out && go tool cover -html=cover.out
   
-or
+  or
 
 
 	go test ./... -coverprofile cover.out; go tool cover -html cover.out
@@ -45,7 +45,7 @@ or
 
 * **Login**
 
-Login functions to get a jwt authorization token.
+  Login functions to get a jwt authorization token.
 
 
 ## How to Run the Application
