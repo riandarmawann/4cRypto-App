@@ -2,6 +2,8 @@ package delivery
 
 import (
 	"4crypto/config"
+	"bytes"
+	"log"
 
 	// "bytes"
 	// "errors"
@@ -20,6 +22,7 @@ import (
 	"testing"
 
 	"github.com/gin-gonic/gin"
+	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/suite"
 )
 
@@ -81,8 +84,28 @@ func (suite *ServerTestSuite) TestSetupControllers_Success() {
 }
 
 func (suite *ServerTestSuite) TestRun_Success() {
-
 	NewServer()
+}
+
+func (suite *ServerTestSuite) TestRun_FailHost() {
+	// Persiapkan server
+	server := &Server{
+		engine: gin.New(),
+		host:   ":invalid", // Sengaja memasukkan host yang tidak valid untuk menimbulkan error
+	}
+
+	// Membuat buffer untuk menangkap output log
+	var buf bytes.Buffer
+	log.SetOutput(&buf)
+
+	// Jalankan setupControllers untuk menambahkan rute
+	server.setupControllers()
+
+	// Jalankan fungsi Run yang seharusnya menghasilkan error
+	server.Run()
+
+	// Memeriksa apakah log.Fatal() dipanggil dengan pesan yang diharapkan
+	assert.Contains(suite.T(), buf.String(), "server can't run", "log.Fatal() should be called with correct message")
 }
 
 func TestServerMockTestSuite(t *testing.T) {

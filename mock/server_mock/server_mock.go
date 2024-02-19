@@ -1,4 +1,4 @@
-package mock
+package servermock
 
 import (
 	managermock "4crypto/mock/manager_mock"
