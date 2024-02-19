@@ -21,12 +21,12 @@ Features available in 4cRypto :
   For run a testing can use 
 
 
-	go test ./... -coverprofile cover.out && go tool cover -html=cover.out
+	  go test ./... -coverprofile cover.out && go tool cover -html=cover.out
   
   or
 
 
-	go test ./... -coverprofile cover.out; go tool cover -html cover.out
+	  go test ./... -coverprofile cover.out; go tool cover -html cover.out
 
 
 * **Authorization**
