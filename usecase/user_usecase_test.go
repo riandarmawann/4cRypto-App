@@ -39,7 +39,7 @@ type UserUseCaseTestSuite struct {
 	uc  UserUseCase
 }
 
-func (s *UserUseCaseTestSuite) SetupTest() {
+func (suite *UserUseCaseTestSuite) SetupTest() {
 	suite.ucm = new(usecasemock.UserUseCaseMock)
 	suite.urm = new(repomock.UserRepoMock)
 	suite.uc = NewUserUseCase(suite.urm)
@@ -101,17 +101,23 @@ func (suite *UserUseCaseTestSuite) TestDeleteById_Success() {
 }
 
 func (suite *UserUseCaseTestSuite) TestDeleteById_UserFail() {
-	suite.urm.On("DeleteUser", mockuser.Id).Return(errors.New("user not found"))
+	suite.urm.On("DeleteUser", mockuser.Id).Return(errors.New("failed to delete user"))
 	actualErr := suite.uc.DeleteById(mockuser.Id)
 	assert.Error(suite.T(), actualErr)
-	assert.Equal(suite.T(), "user with id 1 not found", actualErr.Error())
+	assert.Equal(suite.T(), "failed to delete user with ID 1: failed to delete user", actualErr.Error())
 }
 
 func (suite *UserUseCaseTestSuite) TestUpdateUser_Success() {
-
+	suite.urm.On("UpdateUser", mockuser.Id, mockuser).Return(nil)
+	actualErr := suite.uc.UpdateUser(mockuser.Id, mockuser)
+	assert.Nil(suite.T(), actualErr)
 }
 
 func (suite *UserUseCaseTestSuite) TestUpdateUser_UserFail() {
+	suite.urm.On("UpdateUser", mockuser.Id, mockuser).Return(errors.New("failed to update user"))
+	actualErr := suite.uc.UpdateUser(mockuser.Id, mockuser)
+	assert.Error(suite.T(), actualErr)
+	assert.Equal(suite.T(), "failed to update user with ID 1: failed to update user", actualErr.Error())
 }
 
 func (suite *UserUseCaseTestSuite) TestCreate_Success() {
@@ -121,7 +127,10 @@ func (suite *UserUseCaseTestSuite) TestCreate_Success() {
 }
 
 func (suite *UserUseCaseTestSuite) TestCreate_UserFail() {
-
+	suite.urm.On("Create", mockuser).Return(errors.New("failed to create data customer"))
+	actualErr := suite.uc.Create(mockuser)
+	assert.Error(suite.T(), actualErr)
+	assert.Equal(suite.T(), "failed to create data customer", actualErr.Error())
 }
 func TestUserUseCaseTestSuite(t *testing.T) {
 	suite.Run(t, new(UserUseCaseTestSuite))
