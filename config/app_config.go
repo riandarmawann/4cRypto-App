@@ -8,7 +8,7 @@ const (
 	AuthLogin        = "/login"
 	AuthRefreshToken = "/refresh-token"
 
-	BillGroup = "/bills"
-	BillPost  = "/"
-	BillGet   = "/:id"
+	UserGroup      = "/users"
+	UpdateUserByID = "/update/:id"
+	DeleteUserByID = "/delete/:id"
 )
