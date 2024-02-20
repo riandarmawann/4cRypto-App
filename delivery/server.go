@@ -8,6 +8,7 @@ import (
 
 	"4crypto/config"
 	"4crypto/delivery/controller"
+	"4crypto/delivery/middleware"
 	"4crypto/manager"
 
 	"github.com/gin-gonic/gin"
@@ -48,8 +49,8 @@ func NewServer() *Server {
 }
 
 func (s *Server) setupControllers() {
-	rg := s.engine.Group("/api/v1")
-
+	loggerMiddleware := middleware.NewLoggerMiddleware().Logger()
+	rg := s.engine.Group("/api/v1", loggerMiddleware)
 	controller.NewAuthController(s.auth, rg, s.jwtService).Route()
 }
 
