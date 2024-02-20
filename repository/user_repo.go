@@ -3,11 +3,14 @@ package repository
 import (
 	"4crypto/utils/common/query"
 	"database/sql"
+	"fmt"
+	"time"
 
 	"4crypto/model/entity"
 )
 
 type UserRepository interface {
+	Create(user entity.User) error
 	GetById(id string) (entity.User, error)
 	GetByUsername(username string) (entity.User, error)
 	DeleteUser(id string) error
@@ -19,6 +22,31 @@ type userRepository struct {
 
 func NewUserRepository(db *sql.DB) UserRepository {
 	return &userRepository{db: db}
+}
+
+func (r *userRepository) Create(user entity.User) error {
+	query := `INSERT INTO users (id, name, email, username, password, role, created_at, updated_at) VALUES ($1, $2, $3, $4, NOW(), NOW());`
+
+	fmt.Println(query)
+
+	_, err := r.db.Exec(query,
+		user.Name,
+		user.Email,
+		user.Username,
+		user.Password,
+		user.Role,
+		time.Now(),
+		time.Now(),
+	)
+
+	user.Password = ""
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+
 }
 
 func (r *userRepository) GetById(id string) (entity.User, error) {

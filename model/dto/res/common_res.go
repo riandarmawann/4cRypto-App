@@ -20,3 +20,10 @@ type PagedResponse struct {
 	Data   any               `json:"data"`
 	Paging model_util.Paging `json:"paging"`
 }
+
+type CommonResponse struct {
+	Code    int
+	Status  string
+	Message string
+	Data    any
+}
