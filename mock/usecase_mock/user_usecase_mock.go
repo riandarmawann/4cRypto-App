@@ -19,3 +19,8 @@ func (u *UserUseCaseMock) FindByUsernamePassword(username string, password strin
 	args := u.Called(username, password)
 	return args.Get(0).(entity.User), args.Error(1)
 }
+
+func (u *UserUseCaseMock) DeleteById(id string) error {
+	args := u.Called(id)
+	return args.Error(0)
+}

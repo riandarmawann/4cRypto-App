@@ -11,6 +11,7 @@ import (
 type UserUseCase interface {
 	FindById(id string) (entity.User, error)
 	FindByUsernamePassword(username string, password string) (entity.User, error)
+	DeleteById(id string) error
 }
 
 type userUseCase struct {
@@ -43,4 +44,12 @@ func (u *userUseCase) FindByUsernamePassword(username string, password string) (
 	// set user password jadi kosong agar tidak ditampilkan di response
 	user.Password = ""
 	return user, nil
+}
+
+func (u *userUseCase) DeleteById(id string) error {
+	err := u.userRepo.DeleteUser(id)
+	if err != nil {
+		return fmt.Errorf("failed to delete user with ID %s: %v", id, err)
+	}
+	return nil
 }
