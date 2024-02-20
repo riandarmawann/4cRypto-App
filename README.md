@@ -44,7 +44,7 @@ Features available in 4cRypto :
 
 * **Authorization**
 
-  Authorization functions to provide access to users using jwt tokens.
+  Authorization functions to provide access to users using jwt tokens for a moment.
 
 * **Logger**
 
@@ -59,6 +59,10 @@ Features available in 4cRypto :
 * **Login**
 
   Login functions to get a jwt authorization token.
+
+* **Refresh Token**
+
+  Refresh Token to got new Token if the last Token has been expired
 
 
 ## How to Run the Application
