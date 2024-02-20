@@ -14,6 +14,7 @@ type UserRepository interface {
 	GetById(id string) (entity.User, error)
 	GetByUsername(username string) (entity.User, error)
 	DeleteUser(id string) error
+	UpdateUser(id string, updatedUser entity.User) error
 }
 
 type userRepository struct {
@@ -83,6 +84,27 @@ func (r *userRepository) GetByUsername(username string) (entity.User, error) {
 func (r *userRepository) DeleteUser(id string) error {
 	query := `DELETE FROM users WHERE id = $1`
 	_, err := r.db.Exec(query, id)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (r *userRepository) UpdateUser(id string, updatedUser entity.User) error {
+	query := `
+		UPDATE users
+		SET name = $1, email = $2, username = $3, password = $4, role = $5, updated_at = NOW()
+		WHERE id = $6
+	`
+	_, err := r.db.Exec(query,
+		updatedUser.Name,
+		updatedUser.Email,
+		updatedUser.Username,
+		updatedUser.Password,
+		updatedUser.Role,
+		id,
+	)
 	if err != nil {
 		return err
 	}
