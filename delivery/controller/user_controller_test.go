@@ -42,7 +42,32 @@ func (suite *UserControllerTestSuite) SetupTest() {
 	suite.uc = new(usecasemock.UserUseCaseMock)
 }
 
+
+func (suite *UserControllerTestSuite) TestRoute() {
+	 // Panggil method Route() untuk mengatur route
+	 controller := NewUserController(suite.uc, suite.rg)
+	 controller.Route()
+ 
+	 // Dapatkan daftar rute yang telah ditambahkan ke grup
+	 suite.rg := rg.()
+ 
+	 // Periksa setiap rute
+	 for _, route := range routes {
+		 // Periksa bahwa route telah ditetapkan dengan benar untuk metode DELETE
+		 if route.Method == "DELETE" && route.Path == "/api/v1/users/delete/:id" {
+			 assert.NotNil(suite.T(), route.Handler)
+			 assert.NotNil(suite.T(), route.HandlerFunc)
+		 }
+ 
+		 // Periksa bahwa route telah ditetapkan dengan benar untuk metode PUT
+		 if route.Method == "PUT" && route.Path == "/api/v1/users/update/:id" {
+			 assert.NotNil(suite.T(), route.Handler)
+			 assert.NotNil(suite.T(), route.HandlerFunc)
+		 }
+	 }
+}
 func (suite *UserControllerTestSuite) TestDeleteUser_Success() {
+	// Persiapkan kondisi awal dengan mengatur ekspektasi bahwa pemanggilan use case DeleteById akan berhasil tanpa error
 	suite.uc.On("DeleteById", mockuser.Id).Return(nil)
 
 	// Buat HTTP request context
