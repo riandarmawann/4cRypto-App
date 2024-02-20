@@ -10,11 +10,11 @@ import (
 )
 
 func main() {
+	client := resty.New()
+	
+	client.SetHeader("X-CMC_PRO_API_KEY", "ba777d1f-caee-4be5-8314-335bb1c9ea35")
 
 	urlAPI := "https://pro-api.coinmarketcap.com/v1/cryptocurrency/map?start=1&limit=10&sort=cmc_rank"
-	client := resty.New()
-
-	client.SetHeader("X-CMC_PRO_API_KEY", "ba777d1f-caee-4be5-8314-335bb1c9ea35")
 
 	resp, err := client.R().Get(urlAPI)
 	if err != nil {
