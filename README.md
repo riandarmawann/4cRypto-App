@@ -71,7 +71,8 @@ Features available in 4cRypto :
 
 #### Login
 
-Request : - Method : `POST`
+Request : 
+- Method : `POST`
 - Endpoint : `/api/v1/auth/login`
 - Header :
   - Content-Type : application/json
@@ -102,7 +103,8 @@ Response :
 ```
 #### Refresh Token
 
-Request : - Method : `GET`
+Request : 
+- Method : `GET`
 - Endpoint : `/api/v1/auth/refresh-token`
 
 Response :
@@ -118,6 +120,134 @@ Response :
     },
     "Data": {
         "Token" : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
+    }
+}
+```
+
+#### Create
+
+Request : 
+- Method : `POST`
+- Endpoint : `/users`
+- Header :
+  - Content-Type : application/json
+  - Accept : application/json
+- Body :
+```json
+{
+  "name": "string",
+  "email": "string",
+  "username": "string",
+  "password": "string",
+  "role": "string",
+}
+```
+
+Response :
+
+- Status : 201 Created
+- Body :
+
+```json
+{
+    "Status": {
+        "Code"           : 201,
+        "Description"    : "",
+    },
+    "Data": {
+        ""
+    }
+}
+```
+
+#### Update
+
+Request : 
+- Method : `PUT`
+- Endpoint : `/users/update/:id`
+
+
+Response :
+
+- Status : 200 OK
+- Body :
+
+```json
+{
+    "Status": {
+        "Code"           : 200,
+        "Description"    : "",
+    },
+    "Data": {
+        "Data": {
+          "id": "string",
+          "name": "string",
+          "email": "string",
+          "username": "string",
+          "password": "string",
+          "role": "string",
+          "created_at": "time.Time",
+          "updated_at": "time.Time",
+        }
+    }
+}
+```
+
+#### Delete
+
+Request : 
+- Method : `DELETE`
+- Endpoint : `/users/delete/:id`
+
+
+Response :
+
+- Status : 200 OK
+- Body :
+
+```json
+{
+    "Status": {
+        "Code"           : 200,
+        "Description"    : "Success",
+    },
+    "Data": {
+        "Data": {
+          ""
+    }
+    }
+}
+```
+
+#### GetById
+
+Request : 
+- Method : `GET`
+- Endpoint : `/users/:id`
+
+
+Response :
+
+- Status : 200 OK
+- Body :
+
+```json
+{
+    "Status": {
+        "Code"           : 200,
+        "Description"    : "",
+    },
+    "Data": {
+        "Data": {
+          "id": "string",
+          "name": "string",
+          "email": "string",
+          "username": "string",
+          "password": "string",
+          "role": "string",
+          "created_at": "time.Time",
+          "updated_at": "time.Time",
+    }
     }
 }
 ```
