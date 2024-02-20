@@ -1,10 +1,10 @@
 package controller
 
 import (
+	"4crypto/config"
 	"4crypto/model/dto/res"
 	"4crypto/model/entity"
 	"4crypto/usecase"
-	"encoding/json"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -20,6 +20,15 @@ func NewUserController(userUseCase usecase.UserUseCase, rg *gin.RouterGroup) *Us
 		userUseCase: userUseCase,
 		rg:          rg,
 	}
+}
+
+func (c *UserController) Route() {
+	userGroup := c.rg.Group(config.userGroup)
+	//userGroup.POST(config.CreateUser, c.CreateUser)
+	//userGroup.GET(config.UserGetByID, c.GetUserByID)
+
+	userGroup.DELETE(config.DeleteUserByID, c.DeleteUserByID)
+	userGroup.PUT(config.UpdateUserByID, c.UpdateUserByID)
 }
 
 func (u *UserController) FindById(ctx *gin.Context) {
@@ -64,36 +73,30 @@ func (u *UserController) Create(ctx *gin.Context) {
 	ctx.JSON(res.Code, res)
 }
 
-func (uc *UserController) DeleteUserByID(w http.ResponseWriter, r *http.Request) {
-	// Mendapatkan id dari path parameter
-	id := r.URL.Query().Get("id")
-
+func (uc *UserController) DeleteUserByID(ctx *gin.Context) {
+	id := ctx.Param("id")
 	err := uc.userUseCase.DeleteById(id)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
-
-	w.WriteHeader(http.StatusNoContent)
+	ctx.Status(http.StatusNoContent)
 }
 
-func (uc *UserController) UpdateUserByID(w http.ResponseWriter, r *http.Request) {
-	// Mendapatkan id dari path parameter
-	id := r.URL.Query().Get("id")
+func (uc *UserController) UpdateUserByID(ctx *gin.Context) {
+	id := ctx.Param("id")
 
-	// Mendapatkan data pengguna yang baru dari body request
 	var updatedUser entity.User
-	err := json.NewDecoder(r.Body).Decode(&updatedUser)
-	if err != nil {
-		http.Error(w, "Invalid request body", http.StatusBadRequest)
+	if err := ctx.BindJSON(&updatedUser); err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request body"})
 		return
 	}
 
-	err = uc.userUseCase.UpdateUser(id, updatedUser)
+	err := uc.userUseCase.UpdateUser(id, updatedUser)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
-	w.WriteHeader(http.StatusNoContent)
+	ctx.Status(http.StatusNoContent)
 }

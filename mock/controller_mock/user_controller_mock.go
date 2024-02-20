@@ -11,6 +11,10 @@ type UserControllermock struct {
 	mock.Mock
 }
 
+func (u *UserControllermock) route() {
+	u.Called()
+}
+
 func (u *UserControllermock) Create(ctx *gin.Context) {
 	u.Called(ctx)
 }
