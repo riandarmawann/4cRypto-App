@@ -15,6 +15,7 @@ import (
 
 type ApiConfig struct {
 	ApiPort string
+	ApiCmc string
 }
 
 type DbConfig struct {
@@ -60,6 +61,7 @@ func (c *Config) readConfig() error {
 
 	c.ApiConfig = ApiConfig{
 		ApiPort: os.Getenv("API_PORT"),
+		ApiCmc: os.Getenv("API_CMC"),
 	}
 
 	c.DbConfig = DbConfig{
