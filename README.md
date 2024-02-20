@@ -152,10 +152,13 @@ Response :
 {
     "Status": {
         "Code"           : 201,
-        "Description"    : "",
+        "Description"    : "Data Created",
     },
     "Data": {
-        ""
+      "name": "string",
+      "email": "string",
+      "username": "string",
+      "password": "string",
     }
 }
 ```
