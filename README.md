@@ -152,7 +152,7 @@ Response :
 {
     "Status": {
         "Code"           : 201,
-        "Description"    : "Data Created",
+        "Description"    : "Created",
     },
     "Data": {
       "name": "string",
@@ -179,7 +179,7 @@ Response :
 {
     "Status": {
         "Code"           : 200,
-        "Description"    : "",
+        "Description"    : "Updated",
     },
     "Data": {
         "Data": {
