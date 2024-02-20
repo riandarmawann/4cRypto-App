@@ -23,7 +23,7 @@ func NewUserController(userUseCase usecase.UserUseCase, rg *gin.RouterGroup) *Us
 }
 
 func (c *UserController) Route() {
-	userGroup := c.rg.Group(config.userGroup)
+	userGroup := c.rg.Group(config.UserGroup)
 	//userGroup.POST(config.CreateUser, c.CreateUser)
 	//userGroup.GET(config.UserGetByID, c.GetUserByID)
 
