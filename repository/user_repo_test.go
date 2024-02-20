@@ -95,6 +95,43 @@ func (suite *UserRepoTestSuite) TestDeleteUser_UserFail() {
 	actualErr := suite.repo.DeleteUser("XX")
 	assert.Error(suite.T(), actualErr)
 }
+
+func (suite *UserRepoTestSuite) TestUpdateUser_Success() {
+	suite.mockSql.ExpectExec("UPDATE users").
+		WithArgs(mockUser.Name, mockUser.Email, mockUser.Username, mockUser.Password, mockUser.Role, mockUser.Id).
+		WillReturnResult(sqlmock.NewResult(1, 1))
+
+	actualErr := suite.repo.UpdateUser(mockUser.Id, mockUser)
+	assert.NoError(suite.T(), actualErr)
+}
+
+func (suite *UserRepoTestSuite) TestUpdateUser_UserFail() {
+	suite.mockSql.ExpectExec("UPDATE users").
+		WithArgs(mockUser.Name, mockUser.Email, mockUser.Username, mockUser.Password, mockUser.Role, mockUser.Id).
+		WillReturnError(errors.New("error"))
+
+	actualErr := suite.repo.UpdateUser(mockUser.Id, mockUser)
+	assert.Error(suite.T(), actualErr)
+}
+
+func (suite *UserRepoTestSuite) TestCreate_Success() {
+	suite.mockSql.ExpectExec("INSERT INTO users").
+		WithArgs(mockUser.Name, mockUser.Email, mockUser.Username, mockUser.Password, mockUser.Role).
+		WillReturnResult(sqlmock.NewResult(1, 1))
+
+	actualErr := suite.repo.Create(mockUser)
+	assert.NoError(suite.T(), actualErr)
+}
+
+func (suite *UserRepoTestSuite) TestCreate_UserFail() {
+	suite.mockSql.ExpectExec("INSERT INTO users").
+		WithArgs(mockUser.Id, mockUser.Name, mockUser.Email, mockUser.Username, mockUser.Password, mockUser.Role).
+		WillReturnError(errors.New("error"))
+
+	actualErr := suite.repo.Create(mockUser)
+	assert.Error(suite.T(), actualErr)
+}
+
 func TestUserRepoTestSuite(t *testing.T) {
 	suite.Run(t, new(UserRepoTestSuite))
 }

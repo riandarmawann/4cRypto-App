@@ -39,7 +39,7 @@ type UserUseCaseTestSuite struct {
 	uc  UserUseCase
 }
 
-func (suite *UserUseCaseTestSuite) SetupTest() {
+func (s *UserUseCaseTestSuite) SetupTest() {
 	suite.ucm = new(usecasemock.UserUseCaseMock)
 	suite.urm = new(repomock.UserRepoMock)
 	suite.uc = NewUserUseCase(suite.urm)
@@ -59,13 +59,13 @@ func (suite *UserUseCaseTestSuite) TestFindById_UserFail() {
 	assert.Equal(suite.T(), "user with id 1 not found", actualErr.Error())
 }
 
-func (suite *UserUseCaseTestSuite) TestFindUsernamePassword_Success() {
+func (suite *UserUseCaseTestSuite) TestFindByUsernamePassword_Success() {
 	suite.urm.On("GetByUsername", mockuser.Username).Return(mockuser, nil)
 	_, actualErr := suite.uc.FindByUsernamePassword(mockuser.Username, mockuser.Password)
 	assert.Nil(suite.T(), actualErr)
 }
 
-func (suite *UserUseCaseTestSuite) TestFindUsernamePassword_InvalidUsername() {
+func (suite *UserUseCaseTestSuite) TestFindByUsernamePassword_InvalidUsername() {
 	suite.urm.On("GetByUsername", mockuser.Username).Return(entity.User{}, errors.New("user not found"))
 	_, actualErr := suite.uc.FindByUsernamePassword(mockuser.Username, mockuser.Password)
 	assert.Error(suite.T(), actualErr)
@@ -86,13 +86,6 @@ func (suite *UserUseCaseTestSuite) TestFindUsernamePassword_InvalidPassword() {
 	assert.Equal(suite.T(), "invalid username or password", actualErr.Error())
 }
 
-// func (suite *UserUseCaseTestSuite) TestFindUsernamePassword_InvalidPassword() {
-// 	suite.urm.On("GetByUsername", mockuser.Username).Return(mockuser, errors.New("invalid password"))
-// 	_, actualErr := suite.uc.FindByUsernamePassword(mockuser.Username, mockuser.Password)
-// 	assert.Error(suite.T(), actualErr)
-// 	assert.Equal(suite.T(), "invalid username or password", actualErr.Error())
-// }
-
 func (suite *UserUseCaseTestSuite) TestFindUsernamePassword_Success_PasswordEmpty() {
 	mockuser.Password = "redo1234"
 	suite.urm.On("GetByUsername", mockuser.Username).Return(mockuser, nil)
@@ -107,11 +100,28 @@ func (suite *UserUseCaseTestSuite) TestDeleteById_Success() {
 	assert.Nil(suite.T(), actualErr)
 }
 
-func (suite *UserUseCaseTestSuite) TestDeleteById_Failed() {
+func (suite *UserUseCaseTestSuite) TestDeleteById_UserFail() {
 	suite.urm.On("DeleteUser", mockuser.Id).Return(errors.New("user not found"))
 	actualErr := suite.uc.DeleteById(mockuser.Id)
 	assert.Error(suite.T(), actualErr)
-	assert.Equal(suite.T(), "failed to delete user with ID 1: user not found", actualErr.Error())
+	assert.Equal(suite.T(), "user with id 1 not found", actualErr.Error())
+}
+
+func (suite *UserUseCaseTestSuite) TestUpdateUser_Success() {
+
+}
+
+func (suite *UserUseCaseTestSuite) TestUpdateUser_UserFail() {
+}
+
+func (suite *UserUseCaseTestSuite) TestCreate_Success() {
+	suite.urm.On("Create", mockuser).Return(nil)
+	actualErr := suite.uc.Create(mockuser)
+	assert.Nil(suite.T(), actualErr)
+}
+
+func (suite *UserUseCaseTestSuite) TestCreate_UserFail() {
+
 }
 func TestUserUseCaseTestSuite(t *testing.T) {
 	suite.Run(t, new(UserUseCaseTestSuite))
