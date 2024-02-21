@@ -5,6 +5,7 @@ import (
 	"4crypto/model/dto/res"
 	"4crypto/model/entity"
 	"4crypto/usecase"
+	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -74,12 +75,13 @@ func (u *UserController) Create(ctx *gin.Context) {
 
 func (uc *UserController) DeleteUserByID(ctx *gin.Context) {
 	id := ctx.Param("id")
+	fmt.Println(id)
 	err := uc.userUseCase.DeleteById(id)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
-	ctx.Status(http.StatusNoContent)
+	ctx.Status(http.StatusOK)
 }
 
 func (uc *UserController) UpdateUserByID(ctx *gin.Context) {
