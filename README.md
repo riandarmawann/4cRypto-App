@@ -9,7 +9,12 @@ Download the source code from gitlab to a local folder of your choice by executi
 In order to build 4cRypto, you will need the following tools installed in your system:
 
 * **Go** (recent version) - http://golang.org/doc/install
+
 * **Git** (optional) - http://git-scm.com/downloads
+
+* **Ganache** (optional) - https://trufflesuite.com/ganache/
+
+    Ganache, as provided by the Truffle Suite, is a popular tool for Ethereum development that offers a personal blockchain for Ethereum development purposes. It provides a local Ethereum blockchain environment that developers can use to deploy contracts, develop applications, and run tests. 
 
 * **GITHUB**
 
@@ -63,6 +68,22 @@ Features available in 4cRypto :
 * **Refresh Token**
 
   Refresh Token to got new Token if the last Token has been expired
+
+* **Create/Register User**
+
+  Register functions to create new user
+
+* **Update User**
+
+  Update functions to update user 
+
+* **Delete User**
+
+  Delete functions to delete user
+
+* **GetByID**
+
+  GetByID functions to get user information by id
 
 
 ## How to Run the Application
@@ -124,7 +145,7 @@ Response :
 }
 ```
 
-#### Create
+#### Create/Register
 
 Request : 
 - Method : `POST`
