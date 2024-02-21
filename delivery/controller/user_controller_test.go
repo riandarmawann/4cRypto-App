@@ -54,10 +54,10 @@ func (suite *UserControllerTestSuite) TestRoute() {
 }
 func (suite *UserControllerTestSuite) TestDeleteUser_Success() {
 	// Persiapkan kondisi awal dengan mengatur ekspektasi bahwa pemanggilan use case DeleteUserByID akan berhasil tanpa error
-	suite.uc.On("DeleteUserByID", mock.Anything).Return(nil)
+	suite.uc.On("DeleteUserByID", []string{"1"}).Return(nil)
 
 	// Membuat request HTTP tes
-	req, _ := http.NewRequest("DELETE", "/api/v1/user/1", nil)
+	req, _ := http.NewRequest("DELETE", "/api/v1/user/:id", nil)
 	w := httptest.NewRecorder()
 
 	// Membuat context Gin untuk mensimulasikan request

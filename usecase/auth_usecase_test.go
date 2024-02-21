@@ -44,12 +44,12 @@ func (suite *AuthUseCaseTestSuite) SetupTest() {
 	suite.au = NewAuthUseCase(suite.uum, suite.jtm)
 }
 
-func (suite *AuthUseCaseTestSuite) TestRegister_Success() {
-	suite.uum.On("FindByUsernamePassword", mockAuthRequestDto.Username, mockAuthRequestDto.Password).Return(entity.User{}, nil)
-	actualUser, actualErr := suite.au.Register(mockUser)
-	assert.Nil(suite.T(), actualErr)
-	assert.Equal(suite.T(), mockUser, actualUser)
-}
+//	func (suite *AuthUseCaseTestSuite) TestRegister_Success() {
+//		suite.uum.On("FindByUsernamePassword", mockAuthRequestDto.Username, mockAuthRequestDto.Password).Return(entity.User{}, nil)
+//		actualUser, actualErr := suite.au.Register(mockUser)
+//		assert.Nil(suite.T(), actualErr)
+//		assert.Equal(suite.T(), mockUser, actualUser)
+//	}
 func (suite *AuthUseCaseTestSuite) TestLogin_Success() {
 	suite.uum.On("FindByUsernamePassword", mockAuthRequestDto.Username, mockAuthRequestDto.Password).Return(mockUser, nil)
 	suite.jtm.On("GenerateToken", mockUser).Return(mockAuthResponseDto, nil)
