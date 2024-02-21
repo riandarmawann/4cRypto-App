@@ -14,13 +14,13 @@ func main() {
 	//exchange asset
 	//exchage metadata
 
-	apiCmc, err := config.NewConfig()
+	cfg, err := config.NewConfig()
 	if err != nil {
 		log.Fatal(err)
 	}
 	client := resty.New()
 
-	client.SetHeader("X-CMC_PRO_API_KEY", apiCmc.ApiCmc)
+	client.SetHeader("X-CMC_PRO_API_KEY", cfg.ApiCmc)
 
 	// Ranking Crypto CMC
 	urlAPICoinRank := "https://pro-api.coinmarketcap.com/v1/cryptocurrency/map?start=1&limit=10&sort=cmc_rank"
