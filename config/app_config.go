@@ -11,4 +11,6 @@ const (
 	UserGroup      = "/users"
 	UpdateUserByID = "/update/:id"
 	DeleteUserByID = "/delete/:id"
+	CreateUser     = "/create"
+	UserGetByID    = "/get/:id"
 )

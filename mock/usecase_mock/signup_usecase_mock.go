@@ -1,4 +1,4 @@
-package signupmock
+package usecasemock
 
 import (
 	"4crypto/model/entity"

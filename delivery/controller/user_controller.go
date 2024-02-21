@@ -24,9 +24,8 @@ func NewUserController(userUseCase usecase.UserUseCase, rg *gin.RouterGroup) *Us
 
 func (c *UserController) Route() {
 	userGroup := c.rg.Group(config.UserGroup)
-	//userGroup.POST(config.CreateUser, c.CreateUser)
-	//userGroup.GET(config.UserGetByID, c.GetUserByID)
-
+	userGroup.POST(config.CreateUser, c.Create)
+	userGroup.GET(config.UserGetByID, c.FindById)
 	userGroup.DELETE(config.DeleteUserByID, c.DeleteUserByID)
 	userGroup.PUT(config.UpdateUserByID, c.UpdateUserByID)
 }

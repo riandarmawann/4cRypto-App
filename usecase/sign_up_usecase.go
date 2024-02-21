@@ -26,10 +26,10 @@ func (su *signUpUseCase) SignUp(newUser entity.User) error {
 		return errors.New("username already exists")
 	}
 
-	_, err = su.userRepo.GetByUsername(newUser.Email)
-	if err == nil {
-		return errors.New("email already exists")
-	}
+	// _, err = su.userRepo.GetByUsername(newUser.Email)
+	// if err == nil {
+	// 	return errors.New("email already exists")
+	// }
 
 	// Add the new user
 	err = su.userRepo.Create(newUser)
