@@ -9,6 +9,8 @@ const (
 	AuthRefreshToken = "/refresh-token"
 
 	UserGroup      = "/users"
+	RegisterUser   = "/"
+	GetUserByID    = "/:id"
 	UpdateUserByID = "/update/:id"
 	DeleteUserByID = "/delete/:id"
 )

@@ -9,7 +9,7 @@ import (
 )
 
 type UserUseCase interface {
-	Create(user entity.User) error
+	RegisterUser(user entity.User) error
 	FindById(id string) (entity.User, error)
 	FindByUsernamePassword(username string, password string) (entity.User, error)
 	DeleteById(id string) error
@@ -24,7 +24,7 @@ func NewUserUseCase(userRepo repository.UserRepository) UserUseCase {
 	return &userUseCase{userRepo: userRepo}
 }
 
-func (u *userUseCase) Create(user entity.User) error {
+func (u *userUseCase) RegisterUser(user entity.User) error {
 	err := u.userRepo.Create(user)
 	if err != nil {
 		return fmt.Errorf("failed to create data customer")

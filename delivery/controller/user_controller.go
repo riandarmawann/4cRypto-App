@@ -24,19 +24,18 @@ func NewUserController(userUseCase usecase.UserUseCase, rg *gin.RouterGroup) *Us
 
 func (c *UserController) Route() {
 	userGroup := c.rg.Group(config.UserGroup)
-	//userGroup.POST(config.CreateUser, c.CreateUser)
-	//userGroup.GET(config.UserGetByID, c.GetUserByID)
-
+	userGroup.POST(config.RegisterUser, c.RegisterUser)
+	userGroup.GET(config.GetUserByID, c.GetUserByID)
 	userGroup.DELETE(config.DeleteUserByID, c.DeleteUserByID)
 	userGroup.PUT(config.UpdateUserByID, c.UpdateUserByID)
 }
 
-func (u *UserController) FindById(ctx *gin.Context) {
+func (c *UserController) GetUserByID(ctx *gin.Context) {
 	userID := ctx.Param("id")
 
 	var res res.CommonResponse
 
-	user, err := u.userUseCase.FindById(userID)
+	user, err := c.userUseCase.FindById(userID)
 
 	if err != nil {
 		ctx.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
@@ -51,7 +50,7 @@ func (u *UserController) FindById(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, res)
 }
 
-func (u *UserController) Create(ctx *gin.Context) {
+func (c *UserController) RegisterUser(ctx *gin.Context) {
 
 	var user entity.User
 
@@ -59,7 +58,7 @@ func (u *UserController) Create(ctx *gin.Context) {
 
 	var res res.CommonResponse
 
-	err := u.userUseCase.Create(user)
+	err := c.userUseCase.RegisterUser(user)
 
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -73,9 +72,9 @@ func (u *UserController) Create(ctx *gin.Context) {
 	ctx.JSON(res.Code, res)
 }
 
-func (uc *UserController) DeleteUserByID(ctx *gin.Context) {
+func (c *UserController) DeleteUserByID(ctx *gin.Context) {
 	id := ctx.Param("id")
-	err := uc.userUseCase.DeleteById(id)
+	err := c.userUseCase.DeleteById(id)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -83,7 +82,7 @@ func (uc *UserController) DeleteUserByID(ctx *gin.Context) {
 	ctx.Status(http.StatusNoContent)
 }
 
-func (uc *UserController) UpdateUserByID(ctx *gin.Context) {
+func (c *UserController) UpdateUserByID(ctx *gin.Context) {
 	id := ctx.Param("id")
 
 	var updatedUser entity.User
@@ -92,7 +91,7 @@ func (uc *UserController) UpdateUserByID(ctx *gin.Context) {
 		return
 	}
 
-	err := uc.userUseCase.UpdateUser(id, updatedUser)
+	err := c.userUseCase.UpdateUser(id, updatedUser)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
