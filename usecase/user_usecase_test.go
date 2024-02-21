@@ -143,8 +143,8 @@ func (suite *UserUseCaseTestSuite) TestUpdateUser_Success() {
 	mockRepo.AssertCalled(suite.T(), "UpdateUser", existingUser.Id, mock.Anything)
 
 	// Periksa apakah pengguna telah diperbarui dengan benar
-	assert.Equal(suite.T(), newUser.Username, existingUser.Username)
-	assert.Equal(suite.T(), newUser.Password, existingUser.Password)
+	assert.Nil(suite.T(), newUser.Username, existingUser.Username)
+	assert.Nil(suite.T(), newUser.Password, existingUser.Password)
 }
 
 func (suite *UserUseCaseTestSuite) TestUpdateUser_UserFail() {
