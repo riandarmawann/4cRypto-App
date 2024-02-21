@@ -32,6 +32,7 @@ In order to build 4cRypto, you will need the following tools installed in your s
 
 Features available in 4cRypto :
 
+### Feature Application
 * **Testing**
 
   Testing functions so that existing code runs as expected.
@@ -46,7 +47,6 @@ Features available in 4cRypto :
 
 	  go test ./... -coverprofile cover.out; go tool cover -html cover.out
 
-
 * **Authorization**
 
   Authorization functions to provide access to users using jwt tokens for a moment.
@@ -60,6 +60,8 @@ Features available in 4cRypto :
   Database functions to store and manage data.
 
   Make database with database name:db4crypto and create database with 4cRypto_ddl.sql and 4cRypto_dml.sql
+
+### Feature User
 
 * **Login**
 
@@ -84,6 +86,14 @@ Features available in 4cRypto :
 * **GetByID**
 
   GetByID functions to get user information by id
+
+* **Bid**
+
+  Bid function to user can bid some coin for the high price
+
+* **Ask**
+
+  Ask function to user can ask some coin for the lower price
 
 
 ## How to Run the Application
