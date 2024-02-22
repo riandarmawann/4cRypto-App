@@ -24,3 +24,13 @@ func (u *UserRepoMock) DeleteUser(id string) error {
 	args := u.Called(id)
 	return args.Error(0)
 }
+
+func (u *UserRepoMock) UpdateUser(id string, updatedUser entity.User) error {
+	args := u.Called(id, updatedUser)
+	return args.Error(0)
+}
+
+func (u *UserRepoMock) Create(user entity.User) error {
+	args := u.Called(user)
+	return args.Error(0)
+}

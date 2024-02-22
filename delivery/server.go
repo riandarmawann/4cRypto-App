@@ -42,7 +42,7 @@ func NewServer() *Server {
 
 	repoManager := manager.NewRepoManager(infraManager)
 	ucManager := manager.NewUseCaseManager(repoManager)
-	engine := gin.Default()
+	engine := gin.New()
 	host := fmt.Sprintf(":%s", cfg.ApiPort)
 	jwtService := common.NewJwtToken(cfg.TokenConfig)
 

@@ -2,12 +2,11 @@ package usecase
 
 import (
 	"4crypto/model/dto"
-	"4crypto/model/entity"
 	"4crypto/utils/common"
 )
 
 type AuthUseCase interface {
-	Register(payload entity.User) (entity.User, error)
+	// Register(payload entity.User) (entity.User, error)
 	Login(payload dto.AuthRequestDto) (dto.AuthResponseDto, error)
 }
 
@@ -16,10 +15,10 @@ type authUseCase struct {
 	jwtToken common.JwtToken
 }
 
-func (a *authUseCase) Register(payload entity.User) (entity.User, error) {
-	//TODO implement me
-	panic("implement me")
-}
+// func (a *authUseCase) Register(payload entity.User) (entity.User, error) {
+// 	//TODO implement me
+// 	panic("implement me")
+// }
 
 func (a *authUseCase) Login(payload dto.AuthRequestDto) (dto.AuthResponseDto, error) {
 	user, err := a.uc.FindByUsernamePassword(payload.Username, payload.Password)
