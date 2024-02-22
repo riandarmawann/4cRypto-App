@@ -5,7 +5,7 @@ import (
 	"database/sql"
 	"fmt"
 
-	// "time"
+	"time"
 
 	"4crypto/model/entity"
 )
@@ -37,11 +37,11 @@ func (r *userRepository) Create(user entity.User) error {
 		user.Username,
 		user.Password,
 		user.Role,
-		// time.Now(),
-		// time.Now(),
+		time.Now(),
+		time.Now(),
 	)
 
-	user.Password = ""
+	user.Password = "redo1234"
 
 	if err != nil {
 		return err

@@ -67,14 +67,6 @@ func (suite *SignUpUseCaseTestSuite) TestSignUp_UsernameExists() {
 	assert.Equal(suite.T(), "username already exists", err.Error())
 }
 
-// func (suite *SignUpUseCaseTestSuite) TestSignUp_EmailExists() {
-// 	suite.usrm.On("GetByUsername", signupmock.Username).Return(entity.User{}, errors.New("not found"))
-// 	suite.usrm.On("GetByEmail", signupmock.Email).Return(signupmock, nil)
-// 	err := suite.su.SignUp(signupmock)
-// 	assert.Error(suite.T(), err)
-// 	assert.Equal(suite.T(), "email already exists", err.Error())
-// }
-
 func TestSignUpUseCaseTestSuite(t *testing.T) {
 	suite.Run(t, new(SignUpUseCaseTestSuite))
 }

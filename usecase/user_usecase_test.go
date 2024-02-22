@@ -74,17 +74,17 @@ func (suite *UserUseCaseTestSuite) TestFindByUsernamePassword_InvalidUsername() 
 }
 
 func (suite *UserUseCaseTestSuite) TestFindUsernamePassword_InvalidPassword() {
-	// Prepare the mock to return a user with a different password
-	mockUserWithDifferentPassword := mockuser
-	mockUserWithDifferentPassword.Password = "differentpassword"
-	suite.urm.On("GetByUsername", mockuser.Username).Return(mockUserWithDifferentPassword, nil)
+	// Mock GetByUsername to return a user with the correct Password
+	suite.urm.On("GetByUsername", mockuser.Password).Return(mockuser, nil)
 
-	// Call the FindByUsernamePassword function
-	_, actualErr := suite.uc.FindByUsernamePassword(mockuser.Username, mockuser.Password)
+	// Call the method under test with an incorrect password
+	_, actualErr := suite.uc.FindByUsernamePassword(mockuser.Password, "invalid_password")
 
-	// Assert that error is not nil and contains the expected error message
-	assert.Error(suite.T(), actualErr)
-	assert.Equal(suite.T(), "invalid username or password", actualErr.Error())
+	// Check that an error is returned
+	assert.Error(suite.T(), actualErr, "invalid username or password")
+
+	// Check the error message
+	assert.Equal(suite.T(), "invalid username or password", actualErr.Error(), "invalid username or password")
 }
 
 func (suite *UserUseCaseTestSuite) TestFindUsernamePassword_Success_PasswordEmpty() {
@@ -119,8 +119,8 @@ func (suite *UserUseCaseTestSuite) TestUpdateUser_Success() {
 	}
 	// Persiapkan pengguna baru untuk diperbarui
 	newUser := entity.User{
-		Username: "updated_username",
-		Password: "updated_password",
+		Username: "existing_username",
+		Password: "existing_password",
 	}
 	// Mock repository
 	mockRepo := &repomock.UserRepoMock{}
@@ -143,11 +143,42 @@ func (suite *UserUseCaseTestSuite) TestUpdateUser_Success() {
 	mockRepo.AssertCalled(suite.T(), "UpdateUser", existingUser.Id, mock.Anything)
 
 	// Periksa apakah pengguna telah diperbarui dengan benar
-	assert.Nil(suite.T(), newUser.Username, existingUser.Username)
-	assert.Nil(suite.T(), newUser.Password, existingUser.Password)
+	assert.Equal(suite.T(), newUser.Username, existingUser.Username)
+	assert.Equal(suite.T(), newUser.Password, existingUser.Password)
 }
 
 func (suite *UserUseCaseTestSuite) TestUpdateUser_UserFail() {
+	// Persiapkan pengguna yang tidak ditemukan di repository
+	id := "999"
+	// Persiapkan pengguna baru untuk diperbarui
+	newUser := entity.User{
+		Username: "existing_username",
+		Password: "existing_password",
+	}
+	// Mock repository
+	mockRepo := &repomock.UserRepoMock{}
+	// Expectation: GetById akan mengembalikan kesalahan "user not found"
+	mockRepo.On("GetById", id).Return(entity.User{}, errors.New("user not found"))
+
+	// Inisialisasi use case dengan mock repository
+	useCase := NewUserUseCase(mockRepo)
+
+	// Panggil fungsi UpdateUser
+	err := useCase.UpdateUser(id, newUser)
+
+	// Periksa apakah error yang diharapkan dikembalikan
+	expectedErrMsg := fmt.Sprintf("user with id %s not found", id)
+	assert.Error(suite.T(), err)
+	assert.Equal(suite.T(), expectedErrMsg, err.Error())
+
+	// Assert bahwa metode GetById pada repository telah dipanggil dengan argumen yang sesuai
+	mockRepo.AssertCalled(suite.T(), "GetById", id)
+
+	// Pastikan bahwa UpdateUser tidak dipanggil
+	mockRepo.AssertNotCalled(suite.T(), "UpdateUser", mock.Anything, mock.Anything)
+}
+
+func (suite *UserUseCaseTestSuite) TestUpdateUser_RepositoryError() {
 	// Persiapkan pengguna yang ada di repository
 	existingUser := entity.User{
 		Id:        "1",
@@ -158,15 +189,16 @@ func (suite *UserUseCaseTestSuite) TestUpdateUser_UserFail() {
 	}
 	// Persiapkan pengguna baru untuk diperbarui
 	newUser := entity.User{
-		Username: "updated_username",
-		Password: "updated_password",
+		Username: "existing_username",
+		Password: "existing_password",
 	}
 	// Mock repository
 	mockRepo := &repomock.UserRepoMock{}
 	// Expectation: GetById akan mengembalikan pengguna yang ada
 	mockRepo.On("GetById", existingUser.Id).Return(existingUser, nil)
-	// Expectation: UpdateUser akan mengembalikan error, menunjukkan kegagalan pembaruan
-	mockRepo.On("UpdateUser", existingUser.Id, mock.Anything).Return(errors.New("update failed"))
+	// Expectation: UpdateUser akan mengalami kegagalan
+	expectedErr := errors.New("repository error")
+	mockRepo.On("UpdateUser", existingUser.Id, mock.Anything).Return(expectedErr)
 
 	// Inisialisasi use case dengan mock repository
 	useCase := NewUserUseCase(mockRepo)
@@ -174,13 +206,13 @@ func (suite *UserUseCaseTestSuite) TestUpdateUser_UserFail() {
 	// Panggil fungsi UpdateUser
 	err := useCase.UpdateUser(existingUser.Id, newUser)
 
-	// Periksa apakah error yang diharapkan terjadi
+	// Periksa apakah error yang diharapkan dikembalikan
+	expectedErrMsg := fmt.Sprintf("failed to update user with ID %s: %v", existingUser.Id, expectedErr)
 	assert.Error(suite.T(), err)
-	assert.Equal(suite.T(), fmt.Sprintf("failed to update user with ID %s: update failed", existingUser.Id), err.Error())
+	assert.Equal(suite.T(), expectedErrMsg, err.Error())
 
-	// Assert bahwa metode GetById dipanggil dengan argumen yang sesuai
+	// Assert bahwa metode GetById dan UpdateUser pada repository telah dipanggil dengan argumen yang sesuai
 	mockRepo.AssertCalled(suite.T(), "GetById", existingUser.Id)
-	// Assert bahwa metode UpdateUser dipanggil dengan argumen yang sesuai
 	mockRepo.AssertCalled(suite.T(), "UpdateUser", existingUser.Id, mock.Anything)
 }
 
