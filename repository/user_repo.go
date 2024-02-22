@@ -27,7 +27,7 @@ func NewUserRepository(db *sql.DB) UserRepository {
 }
 
 func (r *userRepository) Create(user entity.User) error {
-	query := `INSERT INTO users (id, name, email, username, password, role, created_at, updated_at) VALUES ($1, $2, $3, $4, NOW(), NOW());`
+	query := `INSERT INTO users (name, email, username, password, role, created_at, updated_at) VALUES ($1, $2, $3, $4, $5, NOW(), NOW());`
 
 	fmt.Println(query)
 

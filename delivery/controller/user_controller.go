@@ -36,7 +36,7 @@ func (u *UserController) FindById(ctx *gin.Context) {
 
 	var res res.CommonResponse
 
-	user, err := u.userUseCase.FindById(userID)
+	user, err := c.userUseCase.FindById(userID)
 
 	if err != nil {
 		ctx.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
@@ -51,7 +51,7 @@ func (u *UserController) FindById(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, res)
 }
 
-func (u *UserController) Create(ctx *gin.Context) {
+func (c *UserController) RegisterUser(ctx *gin.Context) {
 
 	var user entity.User
 
@@ -59,7 +59,7 @@ func (u *UserController) Create(ctx *gin.Context) {
 
 	var res res.CommonResponse
 
-	err := u.userUseCase.Create(user)
+	err := c.userUseCase.RegisterUser(user)
 
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
