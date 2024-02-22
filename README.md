@@ -1,4 +1,4 @@
-# Aplikasi 4cRypto
+# Application 4cRypto
 
 ## Getting Source
 Download the source code from gitlab to a local folder of your choice by executing:
@@ -26,11 +26,11 @@ In order to build 4cRypto, you will need the following tools installed in your s
 
   * github.com/stretchr/testify
     
-## Features
+# Features
 
 Features available in 4cRypto :
 
-### Feature Application
+## Feature Application
 * **Testing**
 
   Testing functions so that existing code runs as expected.
@@ -59,7 +59,7 @@ Features available in 4cRypto :
 
   Make database with database name:db4crypto and create database with 4cRypto_ddl.sql and 4cRypto_dml.sql
 
-### Feature User
+## Feature User
 
 * **Login**
 
@@ -85,7 +85,7 @@ Features available in 4cRypto :
 
   GetByID functions to get user information by id
 
-### Feature Crypto
+## Feature Crypto
 
 * **Bid**
 
@@ -111,11 +111,11 @@ Features available in 4cRypto :
 
   Ganache, as provided by the Truffle Suite, is a popular tool for Ethereum development that offers a personal blockchain for Ethereum development purposes. It provides a local Ethereum blockchain environment that developers can use to deploy contracts, develop applications, and run tests. 
 
-## How to Run the Application
+# How to Run the Application
 
-### User API
+## User API
 
-#### Login
+### Login
 
 Request : 
 - Method : `POST`
@@ -148,7 +148,7 @@ Response :
 }
 ```
 
-#### Refresh Token
+### Refresh Token
 
 Request : 
 - Method : `GET`
@@ -171,7 +171,7 @@ Response :
 }
 ```
 
-#### Create/Register
+### Create/Register
 
 Request : 
 - Method : `POST`
@@ -210,7 +210,7 @@ Response :
 }
 ```
 
-#### Update
+### Update
 
 Request : 
 - Method : `PUT`
@@ -241,7 +241,7 @@ Response :
 }
 ```
 
-#### Delete
+### Delete
 
 Request : 
 - Method : `DELETE`
@@ -267,7 +267,7 @@ Response :
 }
 ```
 
-#### GetById
+### GetById
 
 Request : 
 - Method : `GET`
@@ -298,46 +298,9 @@ Response :
 }
 ```
 
-### Crypto API
+## Crypto API
 
-#### Bids
-
-Request : 
-- Method : `POST`
-- Endpoint : `/order`
-- Header :
-  - Content-Type : application/json
-  - Accept : application/json
-- Body :
-```json
-{
-  "bids": "bool(true)",
-  "size" : "int",
-  "price": "string",
-  "limit": "LIMIT",
-  "market": "MARKET",
-  "timestamp": "time.Time"
-}
-```
-
-Response :
-
-- Status : 200 OK
-- Body :
-
-```json
-{
-    "Status": {
-        "Code"           : 200,
-        "Description"    : "Successfully Order",
-    },
-    "Data": {
-        "msg" : "Success"
-    }
-}
-```
-
-#### Asks
+### Bids
 
 Request : 
 - Method : `POST`
@@ -374,7 +337,44 @@ Response :
 }
 ```
 
-#### OrderBook
+### Asks
+
+Request : 
+- Method : `POST`
+- Endpoint : `/order`
+- Header :
+  - Content-Type : application/json
+  - Accept : application/json
+- Body :
+```json
+{
+  "bids": "bool(true)",
+  "size" : "int",
+  "price": "string",
+  "limit": "LIMIT",
+  "market": "MARKET",
+  "timestamp": "time.Time"
+}
+```
+
+Response :
+
+- Status : 200 OK
+- Body :
+
+```json
+{
+    "Status": {
+        "Code"           : 200,
+        "Description"    : "Successfully Order",
+    },
+    "Data": {
+        "msg" : "Success"
+    }
+}
+```
+
+### OrderBook
 
 Request : 
 - Method : `GET`
@@ -408,7 +408,7 @@ Response :
 }
 ```
 
-#### Cancel Order
+### Cancel Order
 
 Request : 
 - Method : `DELETE`
