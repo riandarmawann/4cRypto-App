@@ -24,3 +24,13 @@ func (u *UserUseCaseMock) DeleteById(id string) error {
 	args := u.Called(id)
 	return args.Error(0)
 }
+
+func (u *UserUseCaseMock) UpdateUser(id string, newUser entity.User) error {
+	args := u.Called(id, newUser)
+	return args.Error(0)
+}
+
+func (u *UserUseCaseMock) Create(user entity.User) error {
+	args := u.Called(user)
+	return args.Error(0)
+}

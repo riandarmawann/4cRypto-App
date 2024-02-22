@@ -72,7 +72,7 @@ func (suite *AuthControllerTestSuite) TestLoginHandler_Success() {
 	ctx, _ := gin.CreateTestContext(record)
 	ctx.Request = request
 	authController.loginHandler(ctx)
-	assert.Equal(suite.T(), http.StatusOK, record.Code)
+	assert.Equal(suite.T(), http.StatusCreated, record.Code)
 
 }
 

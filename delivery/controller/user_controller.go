@@ -5,6 +5,7 @@ import (
 	"4crypto/model/dto/res"
 	"4crypto/model/entity"
 	"4crypto/usecase"
+	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -24,13 +25,13 @@ func NewUserController(userUseCase usecase.UserUseCase, rg *gin.RouterGroup) *Us
 
 func (c *UserController) Route() {
 	userGroup := c.rg.Group(config.UserGroup)
-	userGroup.POST(config.RegisterUser, c.RegisterUser)
-	userGroup.GET(config.GetUserByID, c.GetUserByID)
+	userGroup.POST(config.CreateUser, c.Create)
+	userGroup.GET(config.UserGetByID, c.FindById)
 	userGroup.DELETE(config.DeleteUserByID, c.DeleteUserByID)
 	userGroup.PUT(config.UpdateUserByID, c.UpdateUserByID)
 }
 
-func (c *UserController) GetUserByID(ctx *gin.Context) {
+func (u *UserController) FindById(ctx *gin.Context) {
 	userID := ctx.Param("id")
 
 	var res res.CommonResponse
@@ -72,17 +73,18 @@ func (c *UserController) RegisterUser(ctx *gin.Context) {
 	ctx.JSON(res.Code, res)
 }
 
-func (c *UserController) DeleteUserByID(ctx *gin.Context) {
+func (uc *UserController) DeleteUserByID(ctx *gin.Context) {
 	id := ctx.Param("id")
-	err := c.userUseCase.DeleteById(id)
+	fmt.Println(id)
+	err := uc.userUseCase.DeleteById(id)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
-	ctx.Status(http.StatusNoContent)
+	ctx.Status(http.StatusOK)
 }
 
-func (c *UserController) UpdateUserByID(ctx *gin.Context) {
+func (uc *UserController) UpdateUserByID(ctx *gin.Context) {
 	id := ctx.Param("id")
 
 	var updatedUser entity.User
@@ -91,7 +93,7 @@ func (c *UserController) UpdateUserByID(ctx *gin.Context) {
 		return
 	}
 
-	err := c.userUseCase.UpdateUser(id, updatedUser)
+	err := uc.userUseCase.UpdateUser(id, updatedUser)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
