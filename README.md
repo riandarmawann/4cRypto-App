@@ -14,9 +14,7 @@ In order to build 4cRypto, you will need the following tools installed in your s
 
 * **Ganache** (optional) - https://trufflesuite.com/ganache/
 
-    Ganache, as provided by the Truffle Suite, is a popular tool for Ethereum development that offers a personal blockchain for Ethereum development purposes. It provides a local Ethereum blockchain environment that developers can use to deploy contracts, develop applications, and run tests. 
-
-* **GITHUB**
+* **Packages**
 
   * github.com/gin-gonic/gin
 
@@ -87,6 +85,8 @@ Features available in 4cRypto :
 
   GetByID functions to get user information by id
 
+### Feature Crypto
+
 * **Bid**
 
   Bid function to user can bid some coin for the high price
@@ -95,6 +95,21 @@ Features available in 4cRypto :
 
   Ask function to user can ask some coin for the lower price
 
+* **Cancel Order**
+
+  Cancel Order Function to user can cancel the order from orderbook
+
+* **Matching Engine**
+
+  The cryptocurrency exchange matching engine is software that decentralised exchanges and brokerage companies use to fulfil market orders.
+
+* **OrderBook**
+
+  In the context of cryptocurrency, the term "order books" refers to the record of buy and sell orders for a particular cryptocurrency or trading pair on an exchange platform.
+
+* **Ganache**
+
+  Ganache, as provided by the Truffle Suite, is a popular tool for Ethereum development that offers a personal blockchain for Ethereum development purposes. It provides a local Ethereum blockchain environment that developers can use to deploy contracts, develop applications, and run tests. 
 
 ## How to Run the Application
 
@@ -132,6 +147,7 @@ Response :
     }
 }
 ```
+
 #### Refresh Token
 
 Request : 
@@ -170,7 +186,7 @@ Request :
   "email": "string",
   "username": "string",
   "password": "string",
-  "role": "string",
+  "role": "string"
 }
 ```
 
@@ -212,17 +228,15 @@ Response :
         "Code"           : 200,
         "Description"    : "Updated",
     },
-    "Data": {
-        "Data": {
-          "id": "string",
-          "name": "string",
-          "email": "string",
-          "username": "string",
-          "password": "string",
-          "role": "string",
-          "created_at": "time.Time",
-          "updated_at": "time.Time",
-        }
+      "Data": {
+        "id": "string",
+        "name": "string",
+        "email": "string",
+        "username": "string",
+        "password": "string",
+        "role": "string",
+        "created_at": "time.Time",
+        "updated_at": "time.Time",
     }
 }
 ```
@@ -272,7 +286,6 @@ Response :
         "Description"    : "",
     },
     "Data": {
-        "Data": {
           "id": "string",
           "name": "string",
           "email": "string",
@@ -281,6 +294,141 @@ Response :
           "role": "string",
           "created_at": "time.Time",
           "updated_at": "time.Time",
+    }
+}
+```
+
+### Crypto API
+
+#### Bids
+
+Request : 
+- Method : `POST`
+- Endpoint : `/order`
+- Header :
+  - Content-Type : application/json
+  - Accept : application/json
+- Body :
+```json
+{
+  "bids": "bool(true)",
+  "size" : "int",
+  "price": "string",
+  "limit": "LIMIT",
+  "market": "MARKET",
+  "timestamp": "time.Time"
+}
+```
+
+Response :
+
+- Status : 200 OK
+- Body :
+
+```json
+{
+    "Status": {
+        "Code"           : 200,
+        "Description"    : "Successfully Order",
+    },
+    "Data": {
+        "msg" : "Success"
+    }
+}
+```
+
+#### Asks
+
+Request : 
+- Method : `POST`
+- Endpoint : `/order`
+- Header :
+  - Content-Type : application/json
+  - Accept : application/json
+- Body :
+```json
+{
+  "bids": "bool(true)",
+  "size" : "int",
+  "price": "string",
+  "limit": "LIMIT",
+  "market": "MARKET",
+  "timestamp": "time.Time"
+}
+```
+
+Response :
+
+- Status : 200 OK
+- Body :
+
+```json
+{
+    "Status": {
+        "Code"           : 200,
+        "Description"    : "Successfully Order",
+    },
+    "Data": {
+        "msg" : "Success"
+    }
+}
+```
+
+#### OrderBook
+
+Request : 
+- Method : `GET`
+- Endpoint : `/book/ETH`
+
+Response :
+
+- Status : 200 OK
+- Body :
+
+```json
+{
+    "Status": {
+        "Code"           : 200,
+        "Description"    : "Successfully Get Data",
+    },
+    "Data": {
+        "Ask" : {
+          "price": "int",
+          "size": "int",
+          "bid": "bool(false)",
+          "timestamp": "time.Time"
+        },
+        "Bids": {
+          "price": "int",
+          "size": "int",
+          "bid": "bool(false)",
+          "timestamp": "time.Time"
+        }
+    }
+}
+```
+
+#### Cancel Order
+
+Request : 
+- Method : `DELETE`
+- Endpoint : `/order/:id`
+
+
+Response :
+
+- Status : 200 OK
+- Body :
+
+```json
+{
+    "Status": {
+        "Code"           : 200,
+        "Description"    : "Success",
+    },
+    "Data": {
+        "Data": {
+          ""
     }
     }
 }
