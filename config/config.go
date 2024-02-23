@@ -3,6 +3,10 @@ package config
 import (
 	"errors"
 	"os"
+	"path/filepath"
+	"runtime"
+
+	// "os"
 	"strconv"
 	"time"
 
@@ -11,6 +15,7 @@ import (
 
 type ApiConfig struct {
 	ApiPort string
+	ApiCmc string
 }
 
 type DbConfig struct {
@@ -43,13 +48,20 @@ func NewConfig() (*Config, error) {
 	return cfg, nil
 }
 
+var (
+	_, b, _, _ = runtime.Caller(0)
+	basepath   = filepath.Dir(b)
+)
+
 func (c *Config) readConfig() error {
-	if err := godotenv.Load(); err != nil {
+
+	if err := godotenv.Load(basepath + "/../.env"); err != nil {
 		return errors.New("failed to load environment variables")
 	}
 
 	c.ApiConfig = ApiConfig{
 		ApiPort: os.Getenv("API_PORT"),
+		ApiCmc: os.Getenv("API_CMC"),
 	}
 
 	c.DbConfig = DbConfig{
