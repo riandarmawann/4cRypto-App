@@ -50,7 +50,7 @@ func (suite *UserControllerTestSuite) SetupTest() {
 func (suite *UserControllerTestSuite) TestRoute() {
 	uc := NewUserController(suite.ucm, suite.rg)
 	uc.Route()
-	suite.rg.POST(config.CreateUser, uc.Create)
+	suite.rg.POST(config.CreateUser, uc.RegisterUser)
 	suite.rg.GET(config.UserGetByID, uc.FindById)
 	suite.rg.DELETE(config.DeleteUserByID, uc.DeleteUserByID)
 	suite.rg.PUT(config.UpdateUserByID, uc.UpdateUserByID)
@@ -70,7 +70,7 @@ func (suite *UserControllerTestSuite) TestDeleteUser_Success() {
 
 	// Memanggil handler DeleteUserByID
 	uc := NewUserController(suite.ucm, suite.rg)
-	NewUserController(suite.ucm, suite.rg)
+	// NewUserController(suite.ucm, suite.rg)
 	uc.DeleteUserByID(c)
 
 	// Memeriksa status kode HTTP
@@ -267,7 +267,7 @@ func (suite *UserControllerTestSuite) TestCreate_Success() {
 
 	// Panggil method untuk diuji
 	controller := NewUserController(suite.ucm, suite.rg)
-	controller.Create(ctx)
+	controller.RegisterUser(ctx)
 
 	// Periksa bahwa pemanggilan use case CreateUser telah terjadi dengan benar
 	suite.ucm.AssertCalled(suite.T(), "Create", newUserData)
@@ -297,7 +297,7 @@ func (suite *UserControllerTestSuite) TestCreate_FailedBind() {
 
 	// Panggil method untuk diuji
 	controller := NewUserController(suite.ucm, suite.rg)
-	controller.Create(ctx)
+	controller.RegisterUser(ctx)
 
 	// Periksa bahwa pemanggilan use case CreateUser telah terjadi dengan benar
 	suite.ucm.AssertCalled(suite.T(), "Create", newUserData)

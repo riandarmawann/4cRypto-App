@@ -1,24 +1,28 @@
 package usecase
 
 import (
+	"4crypto/config"
+	"4crypto/model/dto/res"
+	"4crypto/model/entity"
 	cryptoEntity "4crypto/model/entity/crypto"
 	"4crypto/repository"
 	"4crypto/utils/common"
+	"encoding/json"
 	"errors"
+	"fmt"
 	"math/big"
 
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/ethereum/go-ethereum/ethclient"
+	"github.com/go-resty/resty/v2"
 )
 
 type CryptoUseCase interface {
-	// FindById(id string) (entity.User, error)
-	// FindByUsernamePassword(username string, password string) (entity.User, error)
-	// DeleteById(id string) error
 	Orderbooks(ob *common.Orderbook) cryptoEntity.OrderbookData
 	HandlePlaceLimitOrder(ob *common.Orderbook, price float64, o *common.Order) error
 	HandlePlaceMarketOrder(ob *common.Orderbook, order *common.Order) ([]common.Match, []*cryptoEntity.MatchedOrders)
 	HandleMatches(matches []common.Match, users map[int64]*cryptoEntity.User, client *ethclient.Client) error
+	HandleCryptoRank() ([]entity.CmcRank, error)
 }
 
 type cryptoUseCase struct {
@@ -27,6 +31,40 @@ type cryptoUseCase struct {
 
 func NewCryptoUseCase(cryptoRepo repository.CryptoRepository) CryptoUseCase {
 	return &cryptoUseCase{cryptoRepo: cryptoRepo}
+}
+
+func (cu cryptoUseCase) HandleCryptoRank() ([]entity.CmcRank, error) {
+	cfg, err := config.NewConfig()
+	if err != nil {
+		return nil, err
+	}
+	client := resty.New()
+
+	client.SetHeader("X-CMC_PRO_API_KEY", "ba777d1f-caee-4be5-8314-335bb1c9ea35")
+
+	fmt.Println(cfg, "token")
+
+	// Ranking Crypto CMC
+	urlAPICoinRank := "https://pro-api.coinmarketcap.com/v1/cryptocurrency/map?start=1&limit=10&sort=cmc_rank"
+
+	respCoinRank, err := client.R().Get(urlAPICoinRank)
+	if err != nil {
+		return nil, err
+	}
+
+	// convert JSON -> struct
+	err = json.Unmarshal(respCoinRank.Body(), &res.ResponseCoinRank)
+	if err != nil {
+
+		return nil, err
+	}
+
+	for _, rank := range res.ResponseCoinRank.Data {
+		fmt.Println(rank)
+	}
+	// fmt.Println(rank, "")ba777d1f-caee-4be5-8314-335bb1c9ea35
+
+	return res.ResponseCoinRank.Data, nil
 }
 
 func (cu cryptoUseCase) Orderbooks(ob *common.Orderbook) cryptoEntity.OrderbookData {

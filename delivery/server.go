@@ -61,6 +61,7 @@ func (s *Server) setupControllers() {
 	rg := s.engine.Group("/api/v1", loggerMiddleware)
 	controller.NewAuthController(s.auth, rg, s.jwtService).Route()
 	controller.NewCryptoController(s.ucManager.NewCryptoUseCase(), rg, s.client).Route()
+	controller.NewUserController(s.ucManager.NewUserUseCase(), rg).Route()
 }
 
 func (s *Server) Run() {

@@ -37,18 +37,13 @@ func NewCryptoController(cu usecase.CryptoUseCase, rg *gin.RouterGroup, client *
 func (c *CryptoController) Route() {
 	cryptoGroup := c.rg.Group("crypto")
 	cryptoGroup.GET("/book/:market", c.handleGetBook)
+	cryptoGroup.GET("/rank", c.handleGetRank)
 	cryptoGroup.POST("/order", c.handlerPlaceOrder)
 	cryptoGroup.DELETE("/order/:id", c.cancelOrder)
-
-	// ex, err := NewExchange(PrivateKey, client)
-
-	// if err != nil {
-	// 	log.Fatal(err)
-	// }
-
+	fmt.Println("success")
 }
 
-func (c CryptoController) handleGetBook(ctx *gin.Context) {
+func (c *CryptoController) handleGetBook(ctx *gin.Context) {
 	market := cryptoEntity.Market(ctx.Param("market"))
 	ob, ok := c.Orderbooks[market]
 
@@ -70,11 +65,6 @@ func (c CryptoController) handleGetBook(ctx *gin.Context) {
 	c.Users[user1.ID] = user1
 	c.Users[user2.ID] = user2
 
-	// address := "0x7a5f533A4ada3369F543Dd205B1a73bD990cb78e"
-	// balance, _ := c.Client.BalanceAt(context.Background(), commonEth.HexToAddress(address), nil)
-
-	// fmt.Println(balance)
-
 	address := "0xE7Ba61fb64117f2999cC15fB03B53eeb4c866cd4"
 	balance, _ := c.Client.BalanceAt(context.Background(), commonEth.HexToAddress(address), nil)
 	fmt.Println("buyer :", balance)
@@ -92,6 +82,16 @@ func (c CryptoController) handleGetBook(ctx *gin.Context) {
 
 	ctx.JSON(http.StatusOK, orderbookData)
 	// return
+}
+func (c *CryptoController) handleGetRank(ctx *gin.Context) {
+
+	data, err := c.cu.HandleCryptoRank()
+
+	if err != nil {
+		common.SendErrorResponse(ctx, http.StatusBadRequest, err.Error())
+	}
+
+	common.SendSingleResponse(ctx, "success get crypto rank", data)
 }
 
 func (ex *CryptoController) handlerPlaceOrder(c *gin.Context) {

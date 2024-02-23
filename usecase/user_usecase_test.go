@@ -218,13 +218,13 @@ func (suite *UserUseCaseTestSuite) TestUpdateUser_RepositoryError() {
 
 func (suite *UserUseCaseTestSuite) TestCreate_Success() {
 	suite.urm.On("Create", mockuser).Return(nil)
-	actualErr := suite.uc.Create(mockuser)
+	actualErr := suite.uc.RegisterUser(mockuser)
 	assert.Nil(suite.T(), actualErr)
 }
 
 func (suite *UserUseCaseTestSuite) TestCreate_UserFail() {
 	suite.urm.On("Create", mockuser).Return(errors.New("failed to create data customer"))
-	actualErr := suite.uc.Create(mockuser)
+	actualErr := suite.uc.RegisterUser(mockuser)
 	assert.Error(suite.T(), actualErr)
 	assert.Equal(suite.T(), "failed to create data customer", actualErr.Error())
 }

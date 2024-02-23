@@ -25,7 +25,7 @@ func NewUserController(userUseCase usecase.UserUseCase, rg *gin.RouterGroup) *Us
 
 func (c *UserController) Route() {
 	userGroup := c.rg.Group(config.UserGroup)
-	userGroup.POST(config.CreateUser, c.Create)
+	userGroup.POST(config.CreateUser, c.RegisterUser)
 	userGroup.GET(config.UserGetByID, c.FindById)
 	userGroup.DELETE(config.DeleteUserByID, c.DeleteUserByID)
 	userGroup.PUT(config.UpdateUserByID, c.UpdateUserByID)
@@ -36,7 +36,7 @@ func (u *UserController) FindById(ctx *gin.Context) {
 
 	var res res.CommonResponse
 
-	user, err := c.userUseCase.FindById(userID)
+	user, err := u.userUseCase.FindById(userID)
 
 	if err != nil {
 		ctx.JSON(http.StatusNotFound, gin.H{"error": err.Error()})

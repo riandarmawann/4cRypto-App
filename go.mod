@@ -10,6 +10,7 @@ require (
 	github.com/joho/godotenv v1.5.1
 	github.com/lib/pq v1.10.9
 	github.com/stretchr/testify v1.8.4
+	github.com/go-resty/resty/v2 v2.11.0
 )
 
 require (

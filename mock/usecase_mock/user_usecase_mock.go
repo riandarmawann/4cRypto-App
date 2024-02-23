@@ -30,7 +30,7 @@ func (u *UserUseCaseMock) UpdateUser(id string, newUser entity.User) error {
 	return args.Error(0)
 }
 
-func (u *UserUseCaseMock) Create(user entity.User) error {
+func (u *UserUseCaseMock) RegisterUser(user entity.User) error {
 	args := u.Called(user)
 	return args.Error(0)
 }
